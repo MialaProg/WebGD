@@ -4,19 +4,24 @@
 // The canvas is as a grid of 1x1.
 var Canvas = {
     wait : false,
+    coef : 1,
 
     init: (id = 'board') => {
         Canvas.HTMLE = document.getElementById(id);
         Canvas.ctx = Canvas.HTMLE.getContext("2d");
-        window.addEventListener("resize", Canvas.Resize);
+        window.addEventListener("resize", Canvas._resize);
         Canvas.clearHistory();
-        Canvas.Resize();
+        Canvas._resize();
+    },
+
+    _resize: () => {
+        [Canvas.HTMLE.width, Canvas.HTMLE.height] = Canvas.Resize();
+        Canvas.coef = Canvas.HTMLE.height / Canvas.HTMLE.width
+        Canvas.redraw();
     },
 
     Resize: () => {
-        Canvas.HTMLE.height = window.innerHeight;
-        Canvas.HTMLE.width = window.innerWidth;
-        Canvas.redraw();
+        return [window.innerWidth, window.innerHeight];
     },
 
     clearHistory: () => {

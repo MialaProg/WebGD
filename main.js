@@ -68,7 +68,16 @@ async function initMain() {
     console.log('Loaded: Assets');
     await wait(() => libLoaded('Canvas'));
     console.log('Loaded: Canvas');
+    Canvas.Resize = () => {
+        let width = Math.min(window.innerWidth, 2 * window.innerHeight);
+        return [width, Math.round(width / 2)];
+    };
     Canvas.init();
+    await wait(() => libLoaded('Level'));
+    console.log('Loaded: Level');
+    Level.init();
+    await wait(() => libLoaded('Player'));
+    console.log('Loaded: Player');
     await wait(() => libLoaded('Game'));
     console.log('Loaded: Game');
     Game.init();

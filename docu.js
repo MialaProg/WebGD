@@ -1,6 +1,6 @@
 
 // Sounds
-let sfx = new Audio('sound.wav')
+let sfx = new Audio('sound.wav') //=>.play();
 
 window.onload = function () {
     //Board setup
