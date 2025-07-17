@@ -151,10 +151,19 @@ var Game = {
                 updateMouseButton(i, false);
             }
         });
+
+        document.addEventListener('touchstart', (e) => {
+            Game.keys.Touch = true;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            Game.keys.Touch = false;
+        });
     },
 
     // Vérifier si une touche est enfoncée
     getState: (keyCode) => {
+        if (keyCode == 'ArrowUp' && Game.keys.Touch) return true;
         return Game.keys[keyCode] || false;
     }
 
