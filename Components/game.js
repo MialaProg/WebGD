@@ -1,8 +1,8 @@
 var Game = {
     isPlaying: false,
-    gravity: .0002,
+    gravity: .1,//.0002,
     wind: .8,
-    jump: .0011,
+    jump: .7,//.0011,
     velocity: .03,
     mouse: {},
     isEditing: false,
@@ -23,21 +23,28 @@ var Game = {
         });
     },
 
-    GetTime: Date.now,
+    GetTime: ()=>{return audioActualLevel.currentTime;},
 
     play: () => {
         Game.isPlaying = true;
+        audioActualLevel.play();
         Game.lastTime = Game.GetTime();
         Game.loop();
     },
 
-    stop: () => { Game.isPlaying = false; },
+    stop: () => { 
+    Game.isPlaying = false;
+    audioActualLevel.pause();
+     },
 
     loop: () => {
         const time = Game.GetTime();
         let delta = time - Game.lastTime;
         Game.lastTime = time;
-        if (delta > 100) delta = 100;
+        if (delta > 100) {
+            delta = 100;
+            console.warn('Delta: '+delta);
+        }
 
 
         Player.move(delta);
@@ -72,6 +79,7 @@ var Game = {
 
         document.getElementById('xy').innerText = `
             X:${Player.x}; Y:${Player.y}; \n
+            DX:${Player.dx}; DY:${Player.dy}; \n
             LX:${Level.x}; LY: ${Level.y} \n
             MX:${Game.mouse.x}; MY: ${Game.mouse.y}  
         `;
@@ -92,9 +100,6 @@ var Game = {
                 break;
             case 'KeyE':
                 Game.isEditing = !Game.isEditing;
-                break;
-            case 'KeyR':
-                Player.death();
                 break;
             case 'KeyL':
                 console.log(Level.data);

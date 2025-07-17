@@ -3,7 +3,7 @@ var Player = {
     x: .4,
     y: 9,
     dy: 0,
-    dyMax: .001,
+    dyMax: 1,
     dx: 0,
     deathY: [0, 22],
 
@@ -12,6 +12,7 @@ var Player = {
         Player.y = 9;
         Player.dy = 0;
         Player.dx = 0;
+        audioActualLevel.currentTime = 0;
     },
 
     move: (delta) => {
@@ -58,7 +59,7 @@ var Player = {
         }
         Player.y = ny;
 
-        if (Player.y > Player.deathY[1]) Player.death();
+        if (Player.y > Player.deathY[1] || Game.getState('KeyR')) Player.death();
     },
 
     draw: () => {

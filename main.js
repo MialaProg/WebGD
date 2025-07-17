@@ -59,7 +59,7 @@ function wait(condition, interval = 100, timeout = 10 ** 7) {
 }
 
 // Code
-
+var audioActualLevel; 
 const XFactor = 2;
 const CubeFactor = 10;
 async function initMain() {
@@ -70,6 +70,7 @@ async function initMain() {
     await Level.init();
     await wait(() => libLoaded('Assets'));
     console.log('Loaded: Assets');
+    audioActualLevel = Assets.get('LV0-NCS.mp3');
     await wait(() => libLoaded('Canvas'));
     console.log('Loaded: Canvas');
     Canvas.Resize = () => {

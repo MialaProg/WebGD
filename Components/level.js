@@ -1,6 +1,7 @@
 var Level = {
     x: 0,
     y: 9.0,
+    followF: 1,
 
     data: {},
 
@@ -18,8 +19,8 @@ var Level = {
 
     move: (delta) => {
         const [dx,dy]=[
-            (Player.x - .8 - Level.x)/2,
-            (Player.y - .7 - Level.y)/2
+            (Player.x - .8 - Level.x)/Level.followF,
+            (Player.y - .7 - Level.y)/Level.followF
         ]
         Level.x += dx;
         // Player.x -= dx;
