@@ -1,12 +1,13 @@
 var Level = {
     x: 0,
-    y: 90,
+    y: 9.0,
 
     data: {},
 
-    init: () => {
-        Level.createXLine(0, 15, 98, 'black');
-        Level.createXLine(0, 15, 99, 'black');
+    init: async () => {
+        Level.data = JSON.parse(await getDb('./Assets/Levels/default.db.mi'));
+        // Level.createXLine(0, 15, 98, 'black');
+        // Level.createXLine(0, 15, 99, 'black');
     },
 
     createXLine: (xi, xf, y, item) => {
@@ -16,17 +17,26 @@ var Level = {
     },
 
     move: (delta) => {
-
+        const [dx,dy]=[
+            (Player.x - .8 - Level.x)/2,
+            (Player.y - .7 - Level.y)/2
+        ]
+        Level.x += dx;
+        // Player.x -= dx;
+        Level.y += dy;
+        // Player.y -= dy;
     },
 
     draw: () => {
-        const maxX = Math.ceil(Level.x) + 20;
-        const maxY = Math.ceil(Level.y) + 10;
-        for (let x = Math.floor(Level.x); x < maxX; x++) {
-            for (let y = Math.floor(Level.y); y < maxY; y++) {
+        const lvlX = 10*Level.x;
+        const lvlY = 10*Level.y;
+        const maxX = Math.ceil(lvlX) + 20;
+        const maxY = Math.ceil(lvlY) + 10;
+        for (let x = Math.floor(lvlX); x < maxX; x++) {
+            for (let y = Math.floor(lvlY); y < maxY; y++) {
                 const data = Level.data[[x,y]];
                 if (!data) continue;
-                Canvas.drawRect((x - Level.x)/10, (y-Level.y)/10, .05, .1, data);
+                Canvas.drawRect(.5*(x*.1 - Level.x), y*.1-Level.y, .051, .11, data, 'green');
             }
         }
     }

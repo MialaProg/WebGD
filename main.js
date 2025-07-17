@@ -60,22 +60,23 @@ function wait(condition, interval = 100, timeout = 10 ** 7) {
 
 // Code
 
-
+const XFactor = 2;
+const CubeFactor = 10;
 async function initMain() {
     await wait(() => libLoaded('Tools'));
     console.log('Loaded: Tools');
+    await wait(() => libLoaded('Level'));
+    console.log('Loaded: Level');
+    await Level.init();
     await wait(() => libLoaded('Assets'));
     console.log('Loaded: Assets');
     await wait(() => libLoaded('Canvas'));
     console.log('Loaded: Canvas');
     Canvas.Resize = () => {
-        let width = Math.min(window.innerWidth, 2 * window.innerHeight);
-        return [width, Math.round(width / 2)];
+        let width = Math.min(window.innerWidth, XFactor * window.innerHeight);
+        return [width, Math.round(width / XFactor)];
     };
     Canvas.init();
-    await wait(() => libLoaded('Level'));
-    console.log('Loaded: Level');
-    Level.init();
     await wait(() => libLoaded('Player'));
     console.log('Loaded: Player');
     await wait(() => libLoaded('Game'));

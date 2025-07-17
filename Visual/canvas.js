@@ -67,7 +67,7 @@ var Canvas = {
         Canvas.ctx.restore();
     },
 
-    drawRect: async (x, y, w, h, fillClr, strokeClr, lineW) => {
+    drawRect: async (x, y, w, h, fillClr, strokeClr, lineW=5) => {
         Canvas.history.push(['drawRect', [x, y, w, h, fillClr, strokeClr, lineW]]);
         const uid = Canvas.history.length;
 
