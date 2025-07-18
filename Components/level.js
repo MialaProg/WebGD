@@ -23,9 +23,7 @@ var Level = {
             (Player.y - .7 - Level.y)/Level.followF
         ]
         Level.x += dx;
-        // Player.x -= dx;
         Level.y += dy;
-        // Player.y -= dy;
     },
 
     draw: () => {

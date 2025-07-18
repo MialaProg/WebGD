@@ -1,12 +1,13 @@
 var Game = {
     isPlaying: false,
-    gravity: .1,//.0002,
+    gravity: 10/1000,
     wind: .8,
-    jump: .7,//.0011,
-    velocity: .03,
+    jump: .6,//.0011,
+    velocity: 4/1000,//.03
     mouse: {},
     isEditing: false,
     lastColor: 'black',
+    deltaMax: .2,
 
     init: () => {
         // document.addEventListener("keydown", Game.keydown);
@@ -28,8 +29,8 @@ var Game = {
     play: () => {
         Game.isPlaying = true;
         audioActualLevel.play();
-        Game.lastTime = Game.GetTime();
-        Game.loop();
+        Game.lastTime = performance.now();
+        requestAnimationFrame(Game.loop);
     },
 
     stop: () => { 
@@ -37,13 +38,14 @@ var Game = {
     audioActualLevel.pause();
      },
 
-    loop: () => {
-        const time = Game.GetTime();
+    loop: (time) => {
+
+        // const time = Game.GetTime();
         let delta = time - Game.lastTime;
         Game.lastTime = time;
-        if (delta > 100) {
-            delta = 100;
+        if (Game.delta > Game.deltaMax) {
             console.warn('Delta: '+delta);
+            Game.delta = Game.deltaMax;
         }
 
 
@@ -60,6 +62,7 @@ var Game = {
             Level.data[mouse] = 'white';
             if (Game.getState('KeyZ')) {
 
+                // Game.isPlaying = false;
                 let color = prompt('Color?');
                 console.log('Draw', color, Game.lastColor)
                 if (color !== null) {
@@ -68,6 +71,8 @@ var Game = {
                     originalMouseCube = color;
                     Game.keys.KeyZ = false;
                 }
+                // Game.isPlaying = true;
+                // requestAnimationFrame(Game.loop);
             }
         }
 
@@ -81,11 +86,12 @@ var Game = {
             X:${Player.x}; Y:${Player.y}; \n
             DX:${Player.dx}; DY:${Player.dy}; \n
             LX:${Level.x}; LY: ${Level.y} \n
-            MX:${Game.mouse.x}; MY: ${Game.mouse.y}  
+            MX:${Game.mouse.x}; MY: ${Game.mouse.y}  \n
+            D:${delta}; FPS:${1/delta}
         `;
 
-
         if (Game.isPlaying) requestAnimationFrame(Game.loop);
+
 
     },
 

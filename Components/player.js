@@ -3,7 +3,7 @@ var Player = {
     x: .4,
     y: 9,
     dy: 0,
-    dyMax: 1,
+    dyMax: 9/1000,
     dx: 0,
     deathY: [0, 22],
 
@@ -12,21 +12,38 @@ var Player = {
         Player.y = 9;
         Player.dy = 0;
         Player.dx = 0;
+        Game.lastTime = performance.now();
         audioActualLevel.currentTime = 0;
+        console.error("You're dead");
     },
 
     move: (delta) => {
+        // X move
         Player.dx = (!Game.isEditing || (Game.getState('ArrowRight') - Game.getState('ArrowLeft'))) * Game.velocity || Player.dx * Game.wind
+        Player.x += Player.dx * delta;
 
-        Player.x += Player.dx;
-
-        Player.dy += Game.gravity;
+        // Y move
+        const GRAVITY = Game.gravity * (delta ** 2);
+        let dyComputed = delta * Player.dy + GRAVITY;
+        if (dyComputed > Player.dyMax) dyComputed = Player.dyMax;
+        else if (dyComputed < - Player.dyMax) dyComputed = -Player.dyMax;
+        Player.dy += GRAVITY;
         if (Player.dy > Player.dyMax) Player.dy = Player.dyMax;
+        else if (Player.dy < -Player.dyMax) Player.dy = -Player.dyMax;
 
-        let ny = Player.y + Player.dy * delta;
+        Player.y += dyComputed;
+
+        if (Player.y > Player.deathY[1]
+            || Player.y < Player.deathY[0]
+            || Game.getState('KeyR')) {
+            Player.death();
+            return;
+        };
+
+        // CONTACT VERIF
 
         const minCellX = Math.floor(10 * Player.x);
-        const minCellY = Math.floor(10 * ny);
+        const minCellY = Math.floor(10 * Player.y);
 
         const dataAbove = [
             Level.data[[minCellX, minCellY]],
@@ -38,7 +55,7 @@ var Player = {
         ];
         // const data = dataAbove.concat(dataBellow);
 
-        if (['black'].includes(dataAbove[1])){
+        if (['black'].includes(dataAbove[1])) {
             Player.death();
             return;
         }
@@ -49,17 +66,14 @@ var Player = {
         }
 
         if (dataBellow.includes('black')) {
-            ny = minCellY / 10 + .1;
+            Player.y = minCellY / 10 + .1;
             Player.dy = 0;
         }
 
         if (dataBellow.includes('black')) {
-            ny = minCellY / 10;
+            Player.y = minCellY / 10;
             Player.dy = Game.getState('ArrowUp') * (-Game.jump);
         }
-        Player.y = ny;
-
-        if (Player.y > Player.deathY[1] || Game.getState('KeyR')) Player.death();
     },
 
     draw: () => {
